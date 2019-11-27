@@ -27,10 +27,14 @@ fi
 topic "Downloading Rollbar agent version $ROLLBAR_AGENT_VERSION"
 
 wget "https://github.com/rollbar/rollbar-agent/archive/v$ROLLBAR_AGENT_VERSION.tar.gz" | indent
+ls
 tar -xzf "v$ROLLBAR_AGENT_VERSION.tar.gz" | indent
-cd "rollbar-agent-$ROLLBAR_AGENT_VERSION" | indent
-
+ls
+cd "rollbar-agent-$ROLLBAR_AGENT_VERSION"
+echo "This is in rollbar-agent folder"
+ls
 topic "Installing..."
+apt-get install python-setuptools
 python setup.py install | indent
 cd ..
 
