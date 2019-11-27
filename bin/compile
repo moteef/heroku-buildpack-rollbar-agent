@@ -27,7 +27,7 @@ fi
 topic "Downloading Rollbar agent version $ROLLBAR_AGENT_VERSION"
 
 wget "https://github.com/rollbar/rollbar-agent/archive/v$ROLLBAR_AGENT_VERSION.tar.gz" | indent
-tar -xzf "v$ROLLBAR_AGENT_VERSION" | indent
+tar -xzf "v$ROLLBAR_AGENT_VERSION.tar.gz" | indent
 cd "rollbar-agent-$ROLLBAR_AGENT_VERSION" | indent
 
 topic "Installing..."
