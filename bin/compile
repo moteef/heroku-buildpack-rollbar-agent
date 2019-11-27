@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <end-vir>
+
+set -e
+set -o pipefail
+
+# Debug
+set -x
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+BUILDPACK_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
+
+# Load formating tools
+source "$BUILDPACK_DIR/bin/common.sh"
+
+topic "Creating .rollbar-agent dir"
+mkdir $BUILD_DIR/.rollbar-agent | indent
+
+if [ -f "$ENV_DIR/ROLLBAR_AGENT_VERSION" ]; then
+  ROLLBAR_AGENT_VERSION=$(cat "$ENV_DIR/ROLLBAR_AGENT_VERSION")
+else
+  ROLLBAR_AGENT_VERSION=0.4.3
+fi
+
+topic "Downloading Rollbar agent version $ROLLBAR_AGENT_VERSION"
+
+wget "https://github.com/rollbar/rollbar-agent/archive/v$ROLLBAR_AGENT_VERSION.tar.gz" | indent
+tar -xzf "v$ROLLBAR_AGENT_VERSION" | indent
+cd "rollbar-agent-$ROLLBAR_AGENT_VERSION" | indent
+
+topic "Installing..."
+python setup.py install | indent
+cd ..
+
+topic "Copying base config file"
+cp $BUILDPACK_DIR/extra/rollbar-agent.conf "$BUILD_DIR/.rollbar-agent/rollbar-agent.conf" | indent
+
+topic "Copying .profile.d scripts"
+mkdir -p "$BUILD_DIR/.profile.d" | indent
+cp "$BUILDPACK_DIR/profile/*" "$BUILD_DIR/.profile.d/" | indent
+
