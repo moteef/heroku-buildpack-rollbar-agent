@@ -2,13 +2,12 @@
 
 echo "Starting rollbar-agent..."
 
-ROLLBAR_AGENT_CONF=/app/.rollbar-agent/rollbar-agent.conf
+ROLLBAR_AGENT_CONF=/app/config/rollbar_agent_conf.yml
 
-echo "Replacing ROLLBAR_ACCESS_TOKEN in $ROLLBAR_AGENT_CONF"
-sed -i -e "s/ROLLBAR_ACCESS_TOKEN/$ROLLBAR_ACCESS_TOKEN/" "$ROLLBAR_AGENT_CONF"
+if [ ! -d /app/tmp/rollbar_agent ]; then
+  mkdir -p /app/tmp/rollbar_agent
+fi
 
-# source $VIRTUALENV/bin/activate
-python -u rollbar-agent --config=$CONFIG_FILE &
+/app/bin/rollbar-agent agent -c $ROLLBAR_AGENT_CONF > /app/tmp/rollbar_agent/logs.txt 2>&1 &
 
 echo "Started rollbar-agent"
-
