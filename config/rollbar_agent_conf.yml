@@ -1,4 +1,5 @@
 agent:
+  endPoint: https://api.rollbar.com/api/1/item/
   stateFileName: ./tmp/rollbar/rollbar.state
   filePath: ./tmp/rollbar/logs/
   processedFilePattern: _processed_
